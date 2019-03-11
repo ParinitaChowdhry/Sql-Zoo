@@ -147,4 +147,62 @@ SELECT winner, subject
   FROM nobel
  WHERE yr=1984
  ORDER BY subject in ('Chemistry','Physics'), subject, winner
-Q15
+
+
+
+4 select with select
+Q1
+SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+
+Q2
+SELECT name FROM world
+  WHERE gdp/population >
+     (SELECT gdp/population FROM world
+      WHERE name='United Kingdom') and continent='Europe'
+
+Q3
+SELECT name, continent FROM world
+  WHERE continent in 
+     (SELECT continent FROM world
+      WHERE name='Argentina' or name ='Australia') order by name
+
+Q4
+SELECT name, population FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Canada') and  population <(SELECT population FROM world
+      WHERE name='Poland')
+
+Q5
+SELECT name, concat(Round(population/(SELECT population FROM world
+      WHERE name='Germany')*100,0),'%') FROM world where continent ='Europe'
+
+Q6
+SELECT name
+  FROM world
+ WHERE gdp >= ALL(SELECT gdp
+                           FROM world
+                          WHERE gdp>0 and continent='Europe') and continent!='Europe'
+
+Q7
+SELECT continent, name, area FROM world x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND area>0)
+  
+Q8
+SELECT continent, name, area FROM world x
+  WHERE area >= ALL
+    (SELECT area FROM world y
+        WHERE y.continent=x.continent
+          AND area>0)
+ 
+ Q9
+ 
+ Q10
+ 
+ 
