@@ -103,3 +103,48 @@ Q13
 SELECT name
    FROM world
 WHERE name LIKE '%a%' and name LIKE '%e%' and name LIKE '%i%' and name LIKE '%o%' and name LIKE '%u%' and name NOT LIKE '% %'
+
+3 select from nobel
+Q1
+SELECT *
+  FROM nobel
+ WHERE yr = 1950
+Q2
+SELECT winner
+  FROM nobel
+ WHERE yr = 1962
+   AND subject = 'Literature'
+Q3
+SELECT yr, subject
+  FROM nobel
+ WHERE winner = 'Albert Einstein'
+Q4
+SELECT winner
+  FROM nobel
+ WHERE yr >= 2000 and subject ='Peace'
+Q5
+SELECT yr, subject, winner
+  FROM nobel
+ WHERE yr between 1980 and 1989 and subject ='Literature'
+Q6
+select * from nobel where winner in ('Theodore Roosevelt','Woodrow Wilson','Jimmy Carter','Barack Obama')
+Q7
+select winner from nobel where winner LIKE 'John%'
+Q8
+select yr,subject,winner from nobel where (subject='Physics' and yr=1980) OR (subject='Chemistry' and yr =1984)
+Q9
+select yr,subject,winner from nobel where subject !='Chemistry' and subject !='Medicine' and yr =1980
+Q10
+select yr,subject,winner from nobel where (subject ='Medicine' and yr <1910) OR (subject ='Literature' and yr >=2004)
+Q11
+select yr,subject,winner from nobel where winner='PETER GRÜNBERG'
+Q12
+select yr,subject,winner from nobel where winner='EUGENE O''NEILL'
+Q13
+select winner,yr, subject from nobel where winner Like 'Sir%' Order By yr desc, winner asc
+Q14
+SELECT winner, subject
+  FROM nobel
+ WHERE yr=1984
+ ORDER BY subject in ('Chemistry','Physics'), subject, winner
+Q15
