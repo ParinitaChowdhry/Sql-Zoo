@@ -206,3 +206,113 @@ SELECT continent, name, area FROM world x
  Q10
  
  
+ 5 sum and count
+ 
+ Q1
+ SELECT SUM(population)
+FROM world
+
+Q2
+SELECT distinct continent
+FROM world
+
+Q3
+SELECT sum(GDP)
+FROM world where continent ='Africa'
+
+Q4
+SELECT count(name)
+FROM world where area>1000000
+
+Q5
+SELECT sum(population)
+FROM world where name in ('Estonia', 'Latvia', 'Lithuania')
+
+Q6
+SELECT continent, count(name)
+FROM world group by continent
+
+Q7
+select continent, count(name) FROM world where population>10000000 group by continent 
+
+Q8
+select continent
+from world 
+group by continent
+having sum(population)>100000000
+
+6 Join
+Q1
+SELECT matchid, player FROM goal 
+  WHERE teamid = 'GER'
+
+Q2
+SELECT id,stadium,team1,team2
+  FROM game
+where id =1012
+
+Q3
+SELECT player, teamid, stadium, mdate
+FROM game 
+JOIN goal ON (id=matchid)
+where teamid = 'GER'
+
+Q4
+select team1, team2, player 
+from game 
+join goal on goal.matchid=game.id
+where player like 'Mario%'
+
+Q5
+SELECT player, teamid, coach, gtime
+FROM goal 
+join eteam ON (goal.teamid=eteam.id)
+JOIN game ON (goal.matchid=game.id)
+WHERE gtime<=10
+
+Q6
+select mdate, teamname
+from game
+join eteam on game.team1 = eteam.id
+where coach ='Fernando Santos'
+
+Q7
+select player 
+from goal
+join game on goal.matchid=game.id
+where stadium = 'National Stadium, Warsaw'
+
+Q8
+select distinct player 
+from goal
+join game on goal.matchid=game.id
+where (team2 ='GER' or team1 ='GER') and teamid !='GER'
+
+Q9
+SELECT teamname, count(player)
+  FROM eteam JOIN goal ON id=teamid
+group by teamname
+ ORDER BY teamname
+
+Q10
+select stadium, count(matchid)
+from game
+join goal on game.id = goal.matchid
+group by stadium
+
+Q11
+SELECT matchid,mdate, count(matchid) as noOfGoals
+  FROM game 
+JOIN goal ON matchid = id 
+ WHERE (team1 = 'POL' OR team2 = 'POL')
+group by matchid, mdate
+
+Q12
+select matchid, mdate, count(matchid) 
+from goal
+join game on goal.matchid = game.id
+where teamid='GER'
+group by matchid, mdate
+
+Q13
+
