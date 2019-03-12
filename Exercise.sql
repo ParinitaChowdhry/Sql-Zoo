@@ -314,5 +314,258 @@ join game on goal.matchid = game.id
 where teamid='GER'
 group by matchid, mdate
 
+Exercise 7- More join operators
+Q1
+SELECT id, title
+ FROM movie
+ WHERE yr=1962
+Q2
+SELECT yr
+ FROM movie
+ WHERE title ='Citizen Kane'
+Q3
+select id, title, yr 
+from movie
+where title like '%Star Trek%'
+order by yr
+Q4
+select id
+from actor
+where name ='Glenn Close'
+Q5
+select id
+from movie
+where title ='Casablanca'
+Q6
+select name 
+from actor
+join casting on actor.id = casting.actorid
+where movieid=(select id
+from movie
+where title ='Casablanca')
+
+
+Q7
+select name 
+from actor
+join casting on actor.id = casting.actorid
+where movieid=(select id
+from movie
+where title ='Alien')
+Q8
+select title 
+from movie
+join casting on movie.id = casting.movieid
+where actorid=
+(select id
+from actor
+where name='Harrison Ford')
+Q9
+select title 
+from movie
+join casting on movie.id = casting.movieid
+where actorid=
+(select id
+from actor
+where name='Harrison Ford')
+and ord!=1
+Q10
+select title, name
+from movie
+join casting on movie.id = casting.movieid
+join actor on casting.actorid = actor.id
+where casting.ord=1 and yr = 1962
+
+Q11
+SELECT yr,COUNT(title) FROM
+  movie JOIN casting ON movie.id=movieid
+         JOIN actor   ON actorid=actor.id
+where name='John Travolta'
+GROUP BY yr
+HAVING COUNT(title)=(SELECT MAX(c) FROM
+(SELECT yr,COUNT(title) AS c FROM
+   movie JOIN casting ON movie.id=movieid
+         JOIN actor   ON actorid=actor.id
+ where name='John Travolta'
+ GROUP BY yr) AS t
+)
+Q12
+select title, name from movie
+join casting on movie.id = casting.movieid
+join actor on casting.actorid = actor.id
+where movie.id in(
+SELECT movieid FROM casting
+WHERE actorid IN (
+  SELECT id FROM actor
+  WHERE name='Julie Andrews'))
+and casting.ord=1
 Q13
+select name
+from movie
+join casting on movie.id = casting.movieid
+join actor on casting.actorid = actor.id
+where ord=1
+group by name
+having count(name)>=30
+Q14
+select title, count(actorid) from movie
+join casting on movie.id = casting.movieid
+where yr =1978
+group by title
+order by count(actorid) DESC, title
+
+Q15
+select distinct name
+from actor
+join casting on actor.id = casting.actorid
+where movieid in
+(select movieid
+from casting
+join actor on casting.actorid = actor.id
+where name = 'Art Garfunkel')
+and name != 'Art Garfunkel'
+alternate answer
+select distinct name from actor
+where id in 
+(select actorid
+from casting
+where movieid in
+(select movieid
+from casting
+where actorid in
+(select id 
+from actor
+where name = 'Art Garfunkel')))
+and name != 'Art Garfunkel'
+
+exercise 8
+Q1
+select name 
+from teacher
+where dept is null
+exercise 8+ numeric eg
+Q1
+SELECT A_STRONGLY_AGREE
+  FROM nss
+ WHERE question='Q01'
+   AND institution='Edinburgh Napier University'
+   AND subject='(8) Computer Science'
+
+Q2
+SELECT institution, subject
+  FROM nss
+ WHERE question='Q15'
+   AND score >=100
+
+Q3
+SELECT institution,score
+  FROM nss
+ WHERE question='Q15'
+   AND score<50
+   AND subject='(8) Computer Science'
+Q4
+select subject, sum(response)
+from nss
+where
+question ='Q22'
+and 
+(subject ='(8) Computer Science' 
+or
+subject = '(H) Creative Arts and Design')
+group by subject
+Q5
+select subject, sum(A_STRONGLY_AGREE*response/100)
+from nss
+where question ='Q22'
+and 
+(
+subject ='(8) Computer Science' 
+or
+subject ='(H) Creative Arts and Design'
+)
+group by subject
+
+Q6
+
+Q7
+select institution, round(avg(score),0)
+from nss
+where
+institution like '%Manchester%'
+and question ='Q22'
+group by institution
+Q8
+
+
+
+Exercise 9 Self Join
+Q1
+select count(id) 
+from stops
+
+Q2
+select id 
+from stops
+where 
+name = 'Craiglockhart'
+
+Q3
+select id, name 
+from stops
+join route on stops.id = route.stop
+where
+route.company ='LRT'
+and
+route.num =4
+Q4
+SELECT company, num, COUNT(*)
+FROM route WHERE stop=149 OR stop=53
+GROUP BY company, num
+having count(*) = 2
+Q5
+SELECT a.company, a.num, a.stop, b.stop
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+WHERE a.stop=53 and b.stop in(
+select id 
+from stops
+where name='London Road')
+
+Q6
+SELECT a.company, a.num, stopa.name, stopb.name
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+  JOIN stops stopa ON (a.stop=stopa.id)
+  JOIN stops stopb ON (b.stop=stopb.id)
+WHERE stopa.name='Craiglockhart' and stopb.name = 'London Road'
+
+Q7
+SELECT distinct a.company, a.num
+FROM route a JOIN route b ON
+  (a.company=b.company AND a.num=b.num)
+WHERE a.stop=115 and b.stop =137
+
+Q8
+select a.company, a.num
+from route a 
+join route b on (a.company = b.company and a.num=b.num)
+join stops x on (a.stop = x.id)
+join stops y on (b.stop = y.id)
+where 
+x.name = 'Craiglockhart' and y.name ='Tollcross'
+
+Q9
+select distinct y.name, b.company, b.num
+from route a
+join route b on a.company = b.company and a.num = b.num
+join stops x on a.stop = x.id
+join stops y on b.stop = y.id
+where
+a.company ='LRT'
+and x.name = 'Craiglockhart'
+
+Q10
+
+
+
 
