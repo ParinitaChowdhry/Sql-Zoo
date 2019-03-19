@@ -1,4 +1,4 @@
--- Section 0 select basics
+-- Section 0 Select basics
 -- Question 1
 SELECT population FROM world WHERE name = 'Germany'
 -- Question 2
@@ -8,7 +8,7 @@ SELECT name, area FROM world
   WHERE area BETWEEN 200000 AND 250000
   
   
--- Section 1 select names
+-- Section 1 Select names
 -- Question 1
 SELECT name FROM world
   WHERE name LIKE 'Y%'
@@ -28,8 +28,9 @@ SELECT name FROM world
 SELECT name FROM world
   WHERE name LIKE '%oo%'
 -- Question 7
--- No solution yet
-
+SELECT name 
+FROM world 
+WHERE name LIKE '%a%a%a%'
 -- Question 8
 SELECT name FROM world
  WHERE name LIKE '_t%'
@@ -85,7 +86,8 @@ SELECT name, population, area FROM world
 WHERE area >= 3000000 or population >=250000000
 -- Question 8
 SELECT name, population, area FROM world
-WHERE area >= 3000000 XOR population >=250000000
+WHERE (area >= 3000000 and population <= 250000000) 
+or (area <= 3000000 and population >=250000000)
 -- Question 9
 SELECT name, round(population/1000000, 2), round(GDP/1000000000,2) FROM world
 WHERE continent ='South America'
@@ -155,85 +157,68 @@ SELECT name FROM world
   WHERE population >
      (SELECT population FROM world
       WHERE name='Russia')
-
 -- Question 2
 SELECT name FROM world
   WHERE gdp/population >
      (SELECT gdp/population FROM world
       WHERE name='United Kingdom') and continent='Europe'
-
 -- Question 3
 SELECT name, continent FROM world
   WHERE continent in 
      (SELECT continent FROM world
       WHERE name='Argentina' or name ='Australia') order by name
-
 -- Question 4
 SELECT name, population FROM world
   WHERE population >
      (SELECT population FROM world
       WHERE name='Canada') and  population <(SELECT population FROM world
       WHERE name='Poland')
-
 -- Question 5
 SELECT name, concat(Round(population/(SELECT population FROM world
       WHERE name='Germany')*100,0),'%') FROM world where continent ='Europe'
-
 -- Question 6
 SELECT name
   FROM world
  WHERE gdp >= ALL(SELECT gdp
                            FROM world
                           WHERE gdp>0 and continent='Europe') and continent!='Europe'
-
 -- Question 7
 SELECT continent, name, area FROM world x
   WHERE area >= ALL
     (SELECT area FROM world y
         WHERE y.continent=x.continent
-          AND area>0)
-  
+          AND area>0) 
 -- Question 8
-SELECT continent, name, area FROM world x
-  WHERE area >= ALL
-    (SELECT area FROM world y
-        WHERE y.continent=x.continent
-          AND area>0)
- 
+SELECT continent, name FROM world x
+  WHERE name <= ALL
+    (SELECT name FROM world y
+        WHERE y.continent=x.continent)
  -- Question 9
  -- no solution yet
  -- Question 10
  -- no solution yet
  
--- section 5 sum and count
- 
+-- Section 5 sum and count
  -- Question 1
  SELECT SUM(population)
 FROM world
-
 -- Question 2
 SELECT distinct continent
 FROM world
-
 -- Question 3
 SELECT sum(GDP)
 FROM world where continent ='Africa'
-
 -- Question 4
 SELECT count(name)
 FROM world where area>1000000
-
 -- Question 5
 SELECT sum(population)
 FROM world where name in ('Estonia', 'Latvia', 'Lithuania')
-
 -- Question 6
 SELECT continent, count(name)
 FROM world group by continent
-
 -- Question 7
 select continent, count(name) FROM world where population>10000000 group by continent 
-
 -- Question 8
 select continent
 from world 
@@ -244,68 +229,57 @@ having sum(population)>100000000
 -- Question 1
 SELECT matchid, player FROM goal 
   WHERE teamid = 'GER'
-
 -- Question 2
 SELECT id,stadium,team1,team2
   FROM game
 where id =1012
-
 -- Question 3
 SELECT player, teamid, stadium, mdate
 FROM game 
 JOIN goal ON (id=matchid)
 where teamid = 'GER'
-
 -- Question 4
 select team1, team2, player 
 from game 
 join goal on goal.matchid=game.id
 where player like 'Mario%'
-
 -- Question 5
 SELECT player, teamid, coach, gtime
 FROM goal 
 join eteam ON (goal.teamid=eteam.id)
 JOIN game ON (goal.matchid=game.id)
 WHERE gtime<=10
-
 -- Question 6
 select mdate, teamname
 from game
 join eteam on game.team1 = eteam.id
 where coach ='Fernando Santos'
-
 -- Question 7
 select player 
 from goal
 join game on goal.matchid=game.id
 where stadium = 'National Stadium, Warsaw'
-
 -- Question 8
 select distinct player 
 from goal
 join game on goal.matchid=game.id
 where (team2 ='GER' or team1 ='GER') and teamid !='GER'
-
 -- Question 9
 SELECT teamname, count(player)
   FROM eteam JOIN goal ON id=teamid
 group by teamname
  ORDER BY teamname
-
 -- Question 10
 select stadium, count(matchid)
 from game
 join goal on game.id = goal.matchid
 group by stadium
-
 -- Question 11
 SELECT matchid,mdate, count(matchid) as noOfGoals
   FROM game 
 JOIN goal ON matchid = id 
  WHERE (team1 = 'POL' OR team2 = 'POL')
 group by matchid, mdate
-
 -- Question 12
 select matchid, mdate, count(matchid) 
 from goal
